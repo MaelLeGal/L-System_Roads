@@ -36,6 +36,8 @@ public class LSystemManager : MonoBehaviour
     void Start()
     {
         
+
+
     }
 
     // Update is called once per frame
@@ -65,12 +67,36 @@ public class LSystemManager : MonoBehaviour
     }
 
     /*
-    Simplification of all LSystems
+    Merge points of the LSystems if they are close to each other
     */
-    public void SimplificationLSystem()
+    public void MergeLSystem()
     {
-        
-    }
+        // foreach(var lsystem in list_LSystem)
+        // {
+        //     //lsystem.LSystemPointsDictionary.Keys()
+        // }
+        float step = sizeGrid / nbSquares; // Size of square
 
+        float radius = 1;
+        float x, y;
+        for(int i = 0; i < nbSquares; i++){
+            x = -radius + i * step;
+
+            for(int j = 0; j < nbSquares; j++){
+                y = radius - j * step;
+
+                // Opposite corners of the square
+                Vector3 p1 = new Vector3(x, y, 0);
+                Vector3 p2 = new Vector3(x + step, y - step, 0);
+                
+
+                
+                
+            }
+        }
+
+
+
+    }
 
 }
