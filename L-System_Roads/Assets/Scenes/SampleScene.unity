@@ -248,14 +248,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b68ef4995fc1cf4591919476b1bfce4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LSystem: {fileID: 1473097878}
+  LSystem: {fileID: 11400000, guid: 02872c656f6f0314abf33be9c9593e8a, type: 2}
   prefab: {fileID: 571467703168953118, guid: 78781ef75f0607d49834a30a0b59bf3d, type: 3}
   lineMaterial: {fileID: -8848810374240701247, guid: ab6935774a82673489b2d369114c9ea2, type: 3}
-  length: 15
-  primaryWidth: 0.5
-  secondaryWidth: 0.2
-  anglePrimary: 20
-  angleSecondary: 50
 --- !u!4 &343261925
 Transform:
   m_ObjectHideFlags: 0
@@ -503,7 +498,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1473097879}
-  - component: {fileID: 1473097878}
   m_Layer: 0
   m_Name: LSystem
   m_TagString: Untagged
@@ -511,25 +505,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1473097878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1473097877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 307679dbaeabd6e41b9b080563d9bbc7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rules:
-  - {fileID: 11400000, guid: ee48a70cbf5fb904598c83973e487289, type: 2}
-  - {fileID: 11400000, guid: aa6a6650d2759f74bbd7be7e832cc545, type: 2}
-  rootSentence: F
-  maxDepth: 5
-  randomIgnoreRuleModifier: 1
-  chanceToIgnoreRule: 0.3
 --- !u!4 &1473097879
 Transform:
   m_ObjectHideFlags: 0
@@ -573,7 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb3741b762afa9c4989a6629d66cfe41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LSystem: {fileID: 1473097878}
+  LSystem: {fileID: 0}
   roadHelper: {fileID: 965794120}
   length: 8
   angle: 90
