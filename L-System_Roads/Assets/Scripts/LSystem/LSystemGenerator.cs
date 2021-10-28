@@ -2,9 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
+using System.Linq;
 
-public class LSystemGenerator : MonoBehaviour
+[CreateAssetMenu(fileName = "L-System", menuName = "L-System_Roads/L-System", order = 0)]
+public class LSystemGenerator : ScriptableObject 
 {
+
+    /*
+    The points of the L-System ensemble
+    A dictionnary with the point as key and the type ("PRIMARY","SECONDARY") as value
+    */
+    public Dictionary<Vector3, string> LSystemPointsDictionary = new Dictionary<Vector3,string>();
+
     /*
     The list of rules the L-System have, and will use
     */
@@ -16,10 +25,61 @@ public class LSystemGenerator : MonoBehaviour
     public string rootSentence;
 
     /*
-    The maximum depth/iterations of our L-System
+    The number of secondary L-System that will start on our primary L-System
+    */
+    public int nbSecondaryLSystem = 1;
+
+    /*
+    The list of secondary L-Systems
+    */
+    private List<LSystemGenerator> secondaryLSystems = new List<LSystemGenerator>();
+
+    /*
+    The maximum depth/iterations of our primary L-System
     */
     [Range(0,10)]
-    public int maxDepth = 1;
+    public int maxDepthPrimary = 1;
+
+    /*
+    The maximum depth/iterations of our secondary L-Systems
+    */
+    [Range(0,10)]
+    public int maxDepthSecondary = 1;
+
+    /*
+    The length of the primary's segments
+    */
+    public float lengthPrimary = 10;
+
+    /*
+    The length of the secondary's segments
+    */
+    public float lengthSecondary = 6;
+
+    /*
+    The angle of the primary L-System
+    */
+    public float anglePrimary = 20;
+
+    /*
+    The angle of the secondary L-Systems
+    */
+    public float angleSecondary = 60;
+
+    /*
+    The starting position of the primary L-System
+    */
+    private Vector3 position;
+
+    /*
+    The starting direction of the primary L-System
+    */
+    private Vector3 primaryDirection; //TODO Quaternion ?
+
+    /*
+    The starting directions of the secondary L-Systems
+    */
+    private List<Vector3> secondaryDirections; //TODO Quaternion
 
     /*
     A boolean to activate/deactivate the random ignorance of the rule for a part of a branch
@@ -31,10 +91,6 @@ public class LSystemGenerator : MonoBehaviour
     */
     [Range(0,1)]
     public float chanceToIgnoreRule = 0.3f;
-
-    public void Start(){
-        Debug.Log(GenerateSentence());
-    }
 
     /*
     Generate the full sentence of our L-System
@@ -54,8 +110,9 @@ public class LSystemGenerator : MonoBehaviour
         return GenerateSentence(word);
     }
 
-    public string GenerateSecondaryNetwork(string word = null){
-        return GenerateSentence(word);
+    public string GenerateSecondaryNetwork(int position, string word){
+        string secondarySentence = "[" + GenerateSentence(word) + "]";
+        return secondarySentence;
     }
 
     /*
@@ -64,7 +121,7 @@ public class LSystemGenerator : MonoBehaviour
     */
     public string GrowRecursive(string word, int depth = 0){
 
-        if(depth >= maxDepth){
+        if(depth >= maxDepthPrimary){
             return word;
         }
 
@@ -86,7 +143,7 @@ public class LSystemGenerator : MonoBehaviour
         foreach(Rule rule in rules){
             if(rule.letter == c.ToString())
             {
-                if(randomIgnoreRuleModifier && depth > 3){ // maxDepth Remove maxDepth and change it to value
+                if(randomIgnoreRuleModifier && depth > 3){
                     if(Random.value < chanceToIgnoreRule){
                         return;
                     }
@@ -94,6 +151,17 @@ public class LSystemGenerator : MonoBehaviour
                 newWord.Append(GrowRecursive(rule.GetResult(),depth+1));
             }
         }
+    }
+
+    public List<int> SelectIndexes(string sentence, char c)
+    {
+        List<int> indexes = new List<int>();
+
+        for (int i = sentence.IndexOf(c); i > -1; i = sentence.IndexOf(c, i + 1))
+        {
+            indexes.Add(i);
+        }
+        return Enumerable.Range(0,indexes.Count).OrderBy(x => Random.Range(0,indexes.Count)).Take(nbSecondaryLSystem).OrderBy(x => x).ToList();
     }
 
 }

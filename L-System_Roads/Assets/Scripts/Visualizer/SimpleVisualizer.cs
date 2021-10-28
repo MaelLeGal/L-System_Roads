@@ -20,51 +20,21 @@ public class SimpleVisualizer : MonoBehaviour
     public Material lineMaterial;
 
     /*
-    The length of lines
-    */
-    [SerializeField]
-    private int length = 8;
-    public int Length {get => length > 0 ? length : 1; set => length = value;}
-
-    /*
-    The width of primary network roads
-    */
-    [SerializeField]
-    [Range(0,2)]
-    private float primaryWidth = 0.5f;
-    public float PrimaryWidth {get => primaryWidth > 0f ? primaryWidth : 0.2f; set => primaryWidth = value;}
-
-    /*
-    The width of secondary network roads
-    */
-    [SerializeField]
-    [Range(0,1)]
-    private float secondaryWidth = 0.2f;
-    public float SecondaryWidth {get => secondaryWidth > 0f ? secondaryWidth : 0.1f; set => secondaryWidth = value;}
-
-    /*
-    The angle between the lines of the primary network
-    */
-    [SerializeField]
-    private float anglePrimary = 20;
-    public float AnglePrimary {get => anglePrimary; set => anglePrimary = value;}
-
-    /*
-    The angle between the lines of the secondary network
-    */
-    [SerializeField]
-    private float angleSecondary = 70;
-    public float AngleSecondary {get => angleSecondary; set => angleSecondary = value;}
-
-    /*
     The position of each node of our L-System
     */
     List<Vector3> positions = new List<Vector3>();
 
     private void Start()
     {
+        Debug.Log("Start");
         string sequence = LSystem.GenerateSentence();
-        VisualizeSequence(sequence);
+        //Debug.Log(sequence.Length);
+        List<int> indexes = LSystem.SelectIndexes(sequence, 'F');
+        //Debug.Log(indexes.Count);
+        foreach(int index in indexes){
+            Debug.Log(index);
+        }
+        //VisualizeSequence(sequence);
     }
 
     /*
@@ -72,7 +42,7 @@ public class SimpleVisualizer : MonoBehaviour
     Switch between each rule of our grammar/EncodingLetters to read the sequence and act accordingly
     Call the DrawLine method to draw the roads
     */
-    private void VisualizeSequence(string sequence)
+    /*private void VisualizeSequence(string sequence)
     {
         Stack<AgentParameter> savePoints = new Stack<AgentParameter>();
         Vector3 currentPosition = LSystem.transform.position;//Vector3.zero;
@@ -134,21 +104,21 @@ public class SimpleVisualizer : MonoBehaviour
             }
         }
 
-        /*foreach(Vector3 position in positions){
-            Instantiate(prefab, position, Quaternion.identity);
-        }*/
-    }
+        //foreach(Vector3 position in positions){
+        //    Instantiate(prefab, position, Quaternion.identity);
+        //}
+    }*/
 
     /*
     Create a line renderer and a line game object between a start and an end
     */
-    private void DrawLine(Vector3 start, Vector3 end, Color color, float width, int tanValue){
+    /*private void DrawLine(Vector3 start, Vector3 end, Color color, float width, int tanValue){
 
         List<Vector3> pointsCurve = new List<Vector3>();
-        /*int tanValue = 5;
-        if(index%2 == 0){
-            tanValue = -tanValue;
-        }*/
+        //int tanValue = 5;
+        //if(index%2 == 0){
+        //    tanValue = -tanValue;
+        //}
         List<Vector3> tangentes = new List<Vector3>{new Vector3(tanValue,0,0), new Vector3(-tanValue,0,0)};
         for(float t=0; t <= 1; t+=0.01f){
             pointsCurve.Add(Hermite.computePointAtT(t,new List<Vector3>{start,end}, tangentes));
@@ -162,8 +132,8 @@ public class SimpleVisualizer : MonoBehaviour
         lineRenderer.endColor = color;
         lineRenderer.startWidth = width;
         lineRenderer.endWidth = width;
-        /*lineRenderer.SetPosition(0,start);
-        lineRenderer.SetPosition(1,end);*/
+        //lineRenderer.SetPosition(0,start);
+        //lineRenderer.SetPosition(1,end);
 
         int lengthOfLineRenderer = pointsCurve.Count;
         lineRenderer.positionCount = lengthOfLineRenderer;
@@ -172,5 +142,5 @@ public class SimpleVisualizer : MonoBehaviour
         {
             lineRenderer.SetPosition(i, pointsCurve[i]);
         }
-    }
+    }*/
 }
