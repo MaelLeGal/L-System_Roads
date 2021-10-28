@@ -142,7 +142,7 @@ public class SimpleVisualizer : MonoBehaviour
     /*
     Create a line renderer and a line game object between a start and an end
     */
-    private void DrawLine(Vector3 start, Vector3 end, Color color, float width, int tanValue){
+    public void DrawLine(Vector3 start, Vector3 end, Color color, float width, int tanValue){
 
         List<Vector3> pointsCurve = new List<Vector3>();
         /*int tanValue = 5;
