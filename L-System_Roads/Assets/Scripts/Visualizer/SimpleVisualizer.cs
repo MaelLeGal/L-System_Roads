@@ -28,12 +28,24 @@ public class SimpleVisualizer : MonoBehaviour
     {
         Debug.Log("Start");
         string sequence = LSystem.GenerateSentence();
-        //Debug.Log(sequence.Length);
-        List<int> indexes = LSystem.SelectIndexes(sequence, 'F');
+        List<int> indexes = LSystem.SelectIndex(sequence, 'F');
         //Debug.Log(indexes.Count);
         foreach(int index in indexes){
-            Debug.Log(index);
+            Debug.Log("Index : " + index);
         }
+
+        int offset = 0;
+        int secondarySentenceSize;
+        Debug.Log(sequence.Length);
+
+        foreach(int index in indexes){
+            sequence = LSystem.GenerateSecondaryNetwork(index+offset, sequence, out secondarySentenceSize);
+            offset += secondarySentenceSize;
+        }
+
+        Debug.Log(sequence.Length);
+        Debug.Log(sequence);
+
         //VisualizeSequence(sequence);
     }
 

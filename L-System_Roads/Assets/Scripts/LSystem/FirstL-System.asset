@@ -15,13 +15,14 @@ MonoBehaviour:
   rules:
   - {fileID: 11400000, guid: aa6a6650d2759f74bbd7be7e832cc545, type: 2}
   - {fileID: 11400000, guid: ee48a70cbf5fb904598c83973e487289, type: 2}
-  rootSentence: F
-  nbSecondaryLSystem: 3
-  maxDepthPrimary: 3
-  maxDepthSecondary: 6
+  primaryRootSentence: F
+  secondaryRootSentence: S
+  nbSecondaryLSystem: 5
+  maxDepthPrimary: 6
+  maxDepthSecondary: 1
   lengthPrimary: 10
   lengthSecondary: 6
   anglePrimary: 20
   angleSecondary: 60
-  randomIgnoreRuleModifier: 1
-  chanceToIgnoreRule: 0.3
+  randomIgnoreRuleModifier: 0
+  chanceToIgnoreRule: 0
