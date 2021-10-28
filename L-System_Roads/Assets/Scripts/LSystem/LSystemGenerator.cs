@@ -12,7 +12,7 @@ public class LSystemGenerator : ScriptableObject
     The points of the L-System ensemble
     A dictionnary with the point as key and the type ("PRIMARY","SECONDARY") as value
     */
-    public Dictionary<Vector3, string> LSystemPointsDictionary = new Dictionary<Vector3,string>();
+    public Dictionary<string, List<Vector3>> LSystemPointsDictionary = new Dictionary<string, List<Vector3>>();
 
     /*
     The list of rules the L-System have, and will use
@@ -22,7 +22,12 @@ public class LSystemGenerator : ScriptableObject
     /*
     The first sequence of the L-System
     */
-    public string rootSentence;
+    public string primaryRootSentence;
+
+    /*
+    The first sequence of the secondary L-System
+    */
+    public string secondaryRootSentence;
 
     /*
     The number of secondary L-System that will start on our primary L-System
@@ -79,7 +84,7 @@ public class LSystemGenerator : ScriptableObject
     /*
     The starting directions of the secondary L-Systems
     */
-    private List<Vector3> secondaryDirections; //TODO Quaternion
+    private List<Vector3> secondaryDirections; //TODO Quaternion ?
 
     /*
     A boolean to activate/deactivate the random ignorance of the rule for a part of a branch
@@ -93,26 +98,47 @@ public class LSystemGenerator : ScriptableObject
     public float chanceToIgnoreRule = 0.3f;
 
     /*
-    Generate the full sentence of our L-System
-    Take in parameter a starting sentence or null
-    Null parameter will use the root sentence defined as the starting sentence
-    Call the GrowRecursive method to create the full sentence
+    Generate the full sentence of a L-System
+    return the full sentence of a L-System
     */
     public string GenerateSentence(string word = null){
-        if(word == null){
-            word = rootSentence;
-        }
-
         return GrowRecursive(word);
     }
 
+    /*
+    Generate the full sentence of our Primary Network
+    Take in parameter a starting sentence or null
+        Null parameter will use the root sentence defined as the starting sentence
+        Call the GenerateSentence method to create the full primary network sentence
+    return the primary network sentence
+    */
     public string GeneratePrimaryNetwork(string word = null){
+        if(word == null){
+            word = primaryRootSentence;
+        }
         return GenerateSentence(word);
     }
 
-    public string GenerateSecondaryNetwork(int position, string word){
+    /*
+    Generate the full sentence of our Secondary Network
+    Take in parameter :
+        An int, the position at which the secondary network will be inserted
+        A string, the current sentence of our systems
+        An output int, the size of our secondary network sentence
+        A string or null, the starting sentence of our secondary network L-System
+            Null parameter will use the root sentence defined as the starting sentence
+            Call the Generate method to create the full sentence
+    Call the GenerateSentence method to create the full secondary network sentence
+    return the current sentence modified with the inserted secondary network sentence
+    */
+    public string GenerateSecondaryNetwork(int position, string sentence, out int secondarySentenceSize, string word = null){
+        if(word == null){
+            word = secondaryRootSentence;
+        }
         string secondarySentence = "[" + GenerateSentence(word) + "]";
-        return secondarySentence;
+        secondarySentenceSize = secondarySentence.Length;
+        sentence = sentence.Insert(position, secondarySentence);
+        return sentence;
     }
 
     /*
@@ -153,7 +179,11 @@ public class LSystemGenerator : ScriptableObject
         }
     }
 
-    public List<int> SelectIndexes(string sentence, char c)
+    /*
+    Select randomly nbSecondaryLSystem index of the specified character in a sentence
+    return the index which will correspond to the starting points of our secondary networks
+    */
+    public List<int> SelectIndex(string sentence, char c)
     {
         List<int> indexes = new List<int>();
 
@@ -161,7 +191,8 @@ public class LSystemGenerator : ScriptableObject
         {
             indexes.Add(i);
         }
-        return Enumerable.Range(0,indexes.Count).OrderBy(x => Random.Range(0,indexes.Count)).Take(nbSecondaryLSystem).OrderBy(x => x).ToList();
+
+        return indexes.OrderBy(x => Random.Range(1,indexes.Count)).Take(nbSecondaryLSystem).OrderBy(x => x).ToList();
     }
 
 }
