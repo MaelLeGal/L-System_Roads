@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class LSystemManager : MonoBehaviour
 {
@@ -28,8 +29,12 @@ public class LSystemManager : MonoBehaviour
     /*
     Visualizer for drawing LSystems
     */
-    public SimpleVisualizer visualizer; 
+    public SimpleVisualizer visualizer;
 
+    /*
+    The list of Cell 
+    */
+    private List<Cell> cells = new List<Cell>();
 
 
     // Start is called before the first frame update
@@ -88,10 +93,43 @@ public class LSystemManager : MonoBehaviour
                 // Opposite corners of the square
                 Vector3 p1 = new Vector3(x, y, 0);
                 Vector3 p2 = new Vector3(x + step, y - step, 0);
-                
 
-                
-                
+                Cell cell = new Cell(cells.Count, p1, p2);
+
+                for(int k = 0; k < list_LSystem.Count; k++)
+                {
+                    foreach(Vector3 point in list_LSystem[k].LSystemPointsDictionary.SelectMany(d => d.Value).ToList())
+                    {
+                        if (cell.PointInCell(point))
+                        {
+                            cell.points.Add((point,k));
+                        }
+                    }
+                }
+                cell.meanPoints = cell.points.Select(tuple => tuple.Item1).Aggregate((res, val) => res + val) / cell.points.Count;
+
+                List<Vector3> primaryPoints;
+                List<Vector3> secondaryPoints;
+                foreach ((Vector3,int) point in cell.points)
+                {
+                    primaryPoints = list_LSystem[point.Item2].LSystemPointsDictionary["PRIMARY"];
+                    secondaryPoints = list_LSystem[point.Item2].LSystemPointsDictionary["SECONDARY"];
+                    if (primaryPoints.Contains((point.Item1))){
+                        int index = primaryPoints.FindIndex(p => p == point.Item1);
+                        primaryPoints[index] = cell.meanPoints;
+                        list_LSystem[point.Item2].LSystemPointsDictionary["PRIMARY"] = primaryPoints;
+                    }
+                    else if (secondaryPoints.Contains((point.Item1))){
+                        int index = secondaryPoints.FindIndex(p => p == point.Item1);
+                        secondaryPoints[index] = cell.meanPoints;
+                        list_LSystem[point.Item2].LSystemPointsDictionary["SECONDARY"] = secondaryPoints;
+                    }
+                    else
+                    {
+                        Debug.LogError("Point not in primary nor secondary network");
+                    }
+                }
+                cells.Add(cell);
             }
         }
 

@@ -10,7 +10,7 @@ public class LSystemGenerator : ScriptableObject
 
     /*
     The points of the L-System ensemble
-    A dictionnary with the point as key and the type ("PRIMARY","SECONDARY") as value
+    A dictionnary with the type ("PRIMARY","SECONDARY") as key and a list of points as values
     */
     public Dictionary<string, List<Vector3>> LSystemPointsDictionary = new Dictionary<string, List<Vector3>>();
 
@@ -193,6 +193,75 @@ public class LSystemGenerator : ScriptableObject
         }
 
         return indexes.OrderBy(x => Random.Range(1,indexes.Count)).Take(nbSecondaryLSystem).OrderBy(x => x).ToList();
+    }
+
+    public void ProcessSentence(string sentence)
+    {
+        Stack<AgentParameter> savePoints = new Stack<AgentParameter>();
+        Vector3 currentPosition = position;//Vector3.zero;
+        Vector3 direction = primaryDirection;
+        Vector3 tempPosition = position;//Vector3.zero;
+
+        LSystemPointsDictionary["PRIMARY"] = new List<Vector3> { currentPosition };
+        foreach (char letter in sentence)
+        {
+            EncodingLetters encoding = (EncodingLetters)letter;
+            switch (encoding)
+            {
+                case EncodingLetters.unknown:
+                    break;
+                case EncodingLetters.save:
+                    savePoints.Push(new AgentParameter { position = currentPosition, direction = direction, length = lengthPrimary });
+                    break;
+                case EncodingLetters.load:
+                    if (savePoints.Count > 0)
+                    {
+                        AgentParameter ap = savePoints.Pop();
+                        currentPosition = ap.position;
+                        direction = ap.direction;
+                        lengthPrimary = ap.length;
+                    }
+                    else
+                    {
+                        throw new System.Exception("No point saved in Stack");
+                    }
+                    break;
+                case EncodingLetters.draw:
+                    currentPosition += (direction * lengthPrimary);
+                    List<Vector3> primaryPoints = LSystemPointsDictionary["PRIMARY"];
+                    primaryPoints.Add(currentPosition);
+                    LSystemPointsDictionary["PRIMARY"] = primaryPoints;
+                    break;
+                case EncodingLetters.drawSecondary:
+                    currentPosition += (direction * lengthSecondary);
+                    List<Vector3> secondaryPoints;
+                    if (!LSystemPointsDictionary.ContainsKey("SECONDARY"))
+                    {
+                        secondaryPoints = new List<Vector3>();
+                    }
+                    else
+                    {
+                        secondaryPoints = LSystemPointsDictionary["PRIMARY"];
+                    }
+                    secondaryPoints.Add(currentPosition);
+                    LSystemPointsDictionary["SECONDARY"] = secondaryPoints;
+                    break;
+                case EncodingLetters.turnRight:
+                    direction = Quaternion.AngleAxis(anglePrimary, Vector3.up) * direction;
+                    break;
+                case EncodingLetters.turnLeft:
+                    direction = Quaternion.AngleAxis(-anglePrimary, Vector3.up) * direction;
+                    break;
+                case EncodingLetters.turnRightSecondary:
+                    direction = Quaternion.AngleAxis(angleSecondary, Vector3.up) * direction;
+                    break;
+                case EncodingLetters.turnLeftSecondary:
+                    direction = Quaternion.AngleAxis(-angleSecondary, Vector3.up) * direction;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
 }

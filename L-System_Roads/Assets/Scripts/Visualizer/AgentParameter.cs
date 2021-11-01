@@ -5,5 +5,5 @@ using UnityEngine;
 public class AgentParameter
 {
     public Vector3 position, direction;
-    public int length;
+    public float length;
 }

@@ -27,7 +27,7 @@ public class SimpleVisualizer : MonoBehaviour
     private void Start()
     {
         Debug.Log("Start");
-        string sequence = LSystem.GenerateSentence();
+        string sequence = LSystem.GeneratePrimaryNetwork();
         List<int> indexes = LSystem.SelectIndex(sequence, 'F');
         //Debug.Log(indexes.Count);
         foreach(int index in indexes){

@@ -24,7 +24,7 @@ public class RoadHelper : MonoBehaviour
     Instantiate the straight road at the position and direction passed as parameters
     Add the road segments to the dictionary and the hashset
     */
-    public void PlaceStreetAtPosition(Vector3 startPos, Vector3Int direction, int length, float angle)
+    public void PlaceStreetAtPosition(Vector3 startPos, Vector3Int direction, float length, float angle)
     {
         Quaternion rotation = Quaternion.identity;
         if(direction.x == 0){

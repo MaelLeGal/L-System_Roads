@@ -18,8 +18,8 @@ public class Visualizer : MonoBehaviour
     The length of lines
     */
     [SerializeField]
-    private int length = 8;
-    public int Length {get => length > 0 ? length : 1; set => length = value;}
+    private float length = 8f;
+    public float Length {get => length > 0f ? length : 1f; set => length = value;}
 
     /*
     The angle between the lines at a node
