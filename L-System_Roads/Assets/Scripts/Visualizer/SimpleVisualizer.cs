@@ -26,26 +26,6 @@ public class SimpleVisualizer : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Start");
-        string sequence = LSystem.GeneratePrimaryNetwork();
-        List<int> indexes = LSystem.SelectIndex(sequence, 'F');
-        //Debug.Log(indexes.Count);
-        foreach(int index in indexes){
-            Debug.Log("Index : " + index);
-        }
-
-        int offset = 0;
-        int secondarySentenceSize;
-        Debug.Log(sequence.Length);
-
-        foreach(int index in indexes){
-            sequence = LSystem.GenerateSecondaryNetwork(index+offset, sequence, out secondarySentenceSize);
-            offset += secondarySentenceSize;
-        }
-
-        Debug.Log(sequence.Length);
-        Debug.Log(sequence);
-
         //VisualizeSequence(sequence);
     }
 
@@ -54,16 +34,16 @@ public class SimpleVisualizer : MonoBehaviour
     Switch between each rule of our grammar/EncodingLetters to read the sequence and act accordingly
     Call the DrawLine method to draw the roads
     */
-    /*private void VisualizeSequence(string sequence)
+    public void VisualizeSequence(LSystemGenerator lsystem)
     {
         Stack<AgentParameter> savePoints = new Stack<AgentParameter>();
-        Vector3 currentPosition = LSystem.transform.position;//Vector3.zero;
-        Vector3 direction = Vector3.forward;
-        Vector3 tempPosition = LSystem.transform.position;//Vector3.zero;
+        Vector3 currentPosition = lsystem.Position;//Vector3.zero;
+        Vector3 direction = lsystem.PrimaryDirection;
+        Vector3 tempPosition = lsystem.Position;//Vector3.zero;
 
         positions.Add(currentPosition);
         int tanValue = 5;
-        foreach(char letter in sequence){
+        foreach(char letter in lsystem.FullSentence){
             EncodingLetters encoding = (EncodingLetters)letter;
             switch(encoding){
                 case EncodingLetters.unknown:

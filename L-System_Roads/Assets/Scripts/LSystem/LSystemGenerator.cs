@@ -30,6 +30,12 @@ public class LSystemGenerator : ScriptableObject
     public string secondaryRootSentence;
 
     /*
+    The full sentence
+    */
+    private string fullSentence;
+    public string FullSentence {get => fullSentence;}
+
+    /*
     The number of secondary L-System that will start on our primary L-System
     */
     public int nbSecondaryLSystem = 1;
@@ -75,16 +81,19 @@ public class LSystemGenerator : ScriptableObject
     The starting position of the primary L-System
     */
     private Vector3 position;
+    public Vector3 Position {get => position; set => position = value;}
 
     /*
     The starting direction of the primary L-System
     */
     private Vector3 primaryDirection; //TODO Quaternion ?
+    public Vector3 PrimaryDirection {get => primaryDirection; set => primaryDirection = value;}
 
     /*
     The starting directions of the secondary L-Systems
     */
     private List<Vector3> secondaryDirections; //TODO Quaternion ?
+    public List<Vector3> SecondaryDirections {get => secondaryDirections; set => secondaryDirections = value;}
 
     /*
     A boolean to activate/deactivate the random ignorance of the rule for a part of a branch
@@ -98,8 +107,8 @@ public class LSystemGenerator : ScriptableObject
     public float chanceToIgnoreRule = 0.3f;
 
     /*
-    Generate the full sentence of a L-System
-    return the full sentence of a L-System
+    Helper function to create the sentence of the different level of networks
+    return the full sentence of a network
     */
     public string GenerateSentence(string word = null){
         return GrowRecursive(word);
@@ -139,6 +148,26 @@ public class LSystemGenerator : ScriptableObject
         secondarySentenceSize = secondarySentence.Length;
         sentence = sentence.Insert(position, secondarySentence);
         return sentence;
+    }
+
+    /*
+    Generate the full sentence of our L-System with primary and secondary network
+    return the full sentence of our L-System
+    */
+    public string GenerateNetwork(string word = null){
+        string sequence = GeneratePrimaryNetwork();
+        List<int> indexes = SelectIndex(sequence, 'F');
+
+        int offset = 0;
+        int secondarySentenceSize;
+
+        foreach(int index in indexes){
+            sequence = GenerateSecondaryNetwork(index+offset, sequence, out secondarySentenceSize);
+            offset += secondarySentenceSize;
+        }
+        ProcessSentence(sequence);
+        fullSentence = sequence;
+        return sequence;
     }
 
     /*

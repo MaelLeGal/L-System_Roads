@@ -40,15 +40,58 @@ public class LSystemManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-
-
+        PlaceLSystem();
+        Debug.Log("End Placement L-System");
+        StartGenerateLSystem();
+        Debug.Log("End Generation");
+        //MergeLSystem();
+        //Debug.Log("End Merge");
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void PlaceLSystem(){
+        
+        float boundPos = 5 * this.transform.GetChild(0).transform.localScale.x; //The coordinate at the edges of the ground are 5 times the scale of it
+        
+        if(nbLSystem > list_LSystem.Count){
+            nbLSystem = list_LSystem.Count;
+        }
+
+        for(int i = 0; i < nbLSystem; i++){
+
+            Vector3 newPos;
+            Vector3 newDirection;
+            switch(i){
+                case 0: // Left
+                    newPos = new Vector3(-boundPos,0,Random.Range(0,boundPos));
+                    newDirection = Vector3.left;
+                    break;
+                case 1: // Right
+                    newPos = new Vector3(boundPos,0,Random.Range(0,boundPos));
+                    newDirection = Vector3.right;
+                    break;
+                case 2: // Top
+                    newPos = new Vector3(Random.Range(0,boundPos),0,boundPos);
+                    newDirection = Vector3.forward;
+                    break;
+                case 3: // Bottom
+                    newPos = new Vector3(Random.Range(0,boundPos),0,-boundPos);
+                    newDirection = Vector3.back;
+                    break;
+                default: // Center
+                    newPos = new Vector3(0,0,0);
+                    newDirection = Vector3.forward;
+                    break;
+            }
+            Debug.Log(newPos);
+            list_LSystem[i].Position = newPos;
+            list_LSystem[i].PrimaryDirection = newDirection;
+        }
     }
 
 
@@ -67,7 +110,7 @@ public class LSystemManager : MonoBehaviour
     {
         foreach(var lsystem in list_LSystem)
         {
-            lsystem.GeneratePrimaryNetwork();
+            lsystem.GenerateNetwork();
         }
     }
 
@@ -106,27 +149,30 @@ public class LSystemManager : MonoBehaviour
                         }
                     }
                 }
-                cell.meanPoints = cell.points.Select(tuple => tuple.Item1).Aggregate((res, val) => res + val) / cell.points.Count;
+                Debug.Log(cell.points.Count);
+                if(cell.points.Count > 0){
+                    cell.meanPoints = cell.points.Select(tuple => tuple.Item1).Aggregate((res, val) => res + val) / cell.points.Count;
 
-                List<Vector3> primaryPoints;
-                List<Vector3> secondaryPoints;
-                foreach ((Vector3,int) point in cell.points)
-                {
-                    primaryPoints = list_LSystem[point.Item2].LSystemPointsDictionary["PRIMARY"];
-                    secondaryPoints = list_LSystem[point.Item2].LSystemPointsDictionary["SECONDARY"];
-                    if (primaryPoints.Contains((point.Item1))){
-                        int index = primaryPoints.FindIndex(p => p == point.Item1);
-                        primaryPoints[index] = cell.meanPoints;
-                        list_LSystem[point.Item2].LSystemPointsDictionary["PRIMARY"] = primaryPoints;
-                    }
-                    else if (secondaryPoints.Contains((point.Item1))){
-                        int index = secondaryPoints.FindIndex(p => p == point.Item1);
-                        secondaryPoints[index] = cell.meanPoints;
-                        list_LSystem[point.Item2].LSystemPointsDictionary["SECONDARY"] = secondaryPoints;
-                    }
-                    else
+                    List<Vector3> primaryPoints;
+                    List<Vector3> secondaryPoints;
+                    foreach ((Vector3,int) point in cell.points)
                     {
-                        Debug.LogError("Point not in primary nor secondary network");
+                        primaryPoints = list_LSystem[point.Item2].LSystemPointsDictionary["PRIMARY"];
+                        secondaryPoints = list_LSystem[point.Item2].LSystemPointsDictionary["SECONDARY"];
+                        if (primaryPoints.Contains((point.Item1))){
+                            int index = primaryPoints.FindIndex(p => p == point.Item1);
+                            primaryPoints[index] = cell.meanPoints;
+                            list_LSystem[point.Item2].LSystemPointsDictionary["PRIMARY"] = primaryPoints;
+                        }
+                        else if (secondaryPoints.Contains((point.Item1))){
+                            int index = secondaryPoints.FindIndex(p => p == point.Item1);
+                            secondaryPoints[index] = cell.meanPoints;
+                            list_LSystem[point.Item2].LSystemPointsDictionary["SECONDARY"] = secondaryPoints;
+                        }
+                        else
+                        {
+                            Debug.LogError("Point not in primary nor secondary network");
+                        }
                     }
                 }
                 cells.Add(cell);
