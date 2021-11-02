@@ -48,17 +48,10 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Visualizer\Direction.cs" />
-     <Compile Include="Assets\Scripts\Visualizer\Visualizer.cs" />
-     <Compile Include="Assets\Scripts\Visualizer\AgentParameter.cs" />
-     <Compile Include="Assets\Scripts\LSystemManager.cs" />
-     <Compile Include="Assets\Scripts\Visualizer\SimpleVisualizer.cs" />
      <Compile Include="Assets\Scripts\EncodingLetters.cs" />
      <Compile Include="Assets\Scripts\Visualizer\PlacementHelper.cs" />
-     <Compile Include="Assets\Scripts\Visualizer\RoadHelper.cs" />
      <Compile Include="Assets\Scripts\Visualizer\Hermite.cs" />
-     <Compile Include="Assets\Scripts\LSystem\LSystemGenerator.cs" />
      <Compile Include="Assets\Scripts\Rules\Rule.cs" />
-     <Compile Include="Assets\Scripts\Cell.cs" />
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.18f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>
@@ -627,34 +620,34 @@
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.18f1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
  </Reference>
  <Reference Include="Unity.VSCode.Editor">
- <HintPath>D:/Projets/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+ <HintPath>C:/Users/mlegal1/Documents/Virtual_world/L-System_Roads_Project/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro.Editor">
- <HintPath>D:/Projets/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+ <HintPath>C:/Users/mlegal1/Documents/Virtual_world/L-System_Roads_Project/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.VisualStudio.Editor">
- <HintPath>D:/Projets/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.VisualStudio.Editor.dll</HintPath>
+ <HintPath>C:/Users/mlegal1/Documents/Virtual_world/L-System_Roads_Project/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.VisualStudio.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Timeline.Editor">
- <HintPath>D:/Projets/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+ <HintPath>C:/Users/mlegal1/Documents/Virtual_world/L-System_Roads_Project/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Timeline">
- <HintPath>D:/Projets/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+ <HintPath>C:/Users/mlegal1/Documents/Virtual_world/L-System_Roads_Project/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro">
- <HintPath>D:/Projets/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+ <HintPath>C:/Users/mlegal1/Documents/Virtual_world/L-System_Roads_Project/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.UI">
- <HintPath>D:/Projets/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+ <HintPath>C:/Users/mlegal1/Documents/Virtual_world/L-System_Roads_Project/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
  <Reference Include="Unity.PlasticSCM.Editor">
- <HintPath>D:/Projets/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.PlasticSCM.Editor.dll</HintPath>
+ <HintPath>C:/Users/mlegal1/Documents/Virtual_world/L-System_Roads_Project/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.PlasticSCM.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Rider.Editor">
- <HintPath>D:/Projets/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+ <HintPath>C:/Users/mlegal1/Documents/Virtual_world/L-System_Roads_Project/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.UI">
- <HintPath>D:/Projets/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+ <HintPath>C:/Users/mlegal1/Documents/Virtual_world/L-System_Roads_Project/L-System_Roads/L-System_Roads/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
