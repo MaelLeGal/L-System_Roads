@@ -213,7 +213,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8893278}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 155070606}
@@ -252,10 +252,10 @@ MonoBehaviour:
   sizeGrid: 50
   nbSquares: 5
   list_LSystem:
-  - {fileID: 11400000, guid: 60bf4479a1dae4a40b4df98cc28ab5fd, type: 2}
-  - {fileID: 11400000, guid: 60bf4479a1dae4a40b4df98cc28ab5fd, type: 2}
-  - {fileID: 11400000, guid: 60bf4479a1dae4a40b4df98cc28ab5fd, type: 2}
-  visualizer: {fileID: 0}
+  - {fileID: 11400000, guid: 39ae3697bc5e412439a9e28ab16855b8, type: 2}
+  - {fileID: 11400000, guid: d3086e6822f927d4683465a08e71b6a9, type: 2}
+  - {fileID: 11400000, guid: 40e5f9a56ac453d47ae9048f5946b49a, type: 2}
+  visualizer: {fileID: 11400000, guid: 11b52e45dbff424469803d87220af10f, type: 2}
 --- !u!4 &155070606
 Transform:
   m_ObjectHideFlags: 0

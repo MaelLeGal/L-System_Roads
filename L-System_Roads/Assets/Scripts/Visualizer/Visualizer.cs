@@ -35,8 +35,7 @@ public class Visualizer : MonoBehaviour
 
     private void Start()
     {
-        string sequence = LSystem.GenerateSentence();
-        VisualizeSequence(sequence);
+
     }
 
     /*

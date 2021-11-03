@@ -44,8 +44,13 @@ public class LSystemManager : MonoBehaviour
         Debug.Log("End Placement L-System");
         StartGenerateLSystem();
         Debug.Log("End Generation");
-        //MergeLSystem();
+        MergeLSystem();
         //Debug.Log("End Merge");
+
+        foreach(var l in list_LSystem)
+        {
+            visualizer.VisualizeSequence(l);
+        }
     }
 
     // Update is called once per frame
@@ -89,6 +94,7 @@ public class LSystemManager : MonoBehaviour
                     break;
             }
             Debug.Log(newPos);
+            Debug.Log(newDirection);
             list_LSystem[i].Position = newPos;
             list_LSystem[i].PrimaryDirection = newDirection;
         }
@@ -125,23 +131,26 @@ public class LSystemManager : MonoBehaviour
         // }
         float step = sizeGrid / nbSquares; // Size of square
 
-        float radius = 1;
-        float x, y;
-        for(int i = 0; i < nbSquares; i++){
+        float radius = sizeGrid;
+        float x, z;
+        for(int i = 0; i < nbSquares*2; i++){
             x = -radius + i * step;
 
-            for(int j = 0; j < nbSquares; j++){
-                y = radius - j * step;
+            for(int j = 0; j < nbSquares*2; j++){
+                z = radius - j * step;
 
                 // Opposite corners of the square
-                Vector3 p1 = new Vector3(x, y, 0);
-                Vector3 p2 = new Vector3(x + step, y - step, 0);
+                Vector3 p1 = new Vector3(x, 0, z);
+                Vector3 p2 = new Vector3(x + step, 0, z - step);
+
+                // GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                // cube.transform.position = (p1+p2)/2;
 
                 Cell cell = new Cell(cells.Count, p1, p2);
 
                 for(int k = 0; k < list_LSystem.Count; k++)
                 {
-                    foreach(Vector3 point in list_LSystem[k].LSystemPointsDictionary.SelectMany(d => d.Value).ToList())
+                    foreach(Vector3 point in list_LSystem[k]._LSystemPointsList)
                     {
                         if (cell.PointInCell(point))
                         {
@@ -149,25 +158,15 @@ public class LSystemManager : MonoBehaviour
                         }
                     }
                 }
-                Debug.Log(cell.points.Count);
+                //Debug.Log(cell.points.Count);
                 if(cell.points.Count > 0){
                     cell.meanPoints = cell.points.Select(tuple => tuple.Item1).Aggregate((res, val) => res + val) / cell.points.Count;
 
-                    List<Vector3> primaryPoints;
-                    List<Vector3> secondaryPoints;
                     foreach ((Vector3,int) point in cell.points)
                     {
-                        primaryPoints = list_LSystem[point.Item2].LSystemPointsDictionary["PRIMARY"];
-                        secondaryPoints = list_LSystem[point.Item2].LSystemPointsDictionary["SECONDARY"];
-                        if (primaryPoints.Contains((point.Item1))){
-                            int index = primaryPoints.FindIndex(p => p == point.Item1);
-                            primaryPoints[index] = cell.meanPoints;
-                            list_LSystem[point.Item2].LSystemPointsDictionary["PRIMARY"] = primaryPoints;
-                        }
-                        else if (secondaryPoints.Contains((point.Item1))){
-                            int index = secondaryPoints.FindIndex(p => p == point.Item1);
-                            secondaryPoints[index] = cell.meanPoints;
-                            list_LSystem[point.Item2].LSystemPointsDictionary["SECONDARY"] = secondaryPoints;
+                        if (list_LSystem[point.Item2]._LSystemPointsList.Contains((point.Item1))){
+                            int index = list_LSystem[point.Item2]._LSystemPointsList.FindIndex(p => p == point.Item1);
+                            list_LSystem[point.Item2]._LSystemPointsList[index] = cell.meanPoints;
                         }
                         else
                         {

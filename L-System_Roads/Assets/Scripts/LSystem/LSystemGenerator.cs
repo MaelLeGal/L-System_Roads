@@ -14,6 +14,12 @@ public class LSystemGenerator : ScriptableObject
     */
     public Dictionary<string, List<Vector3>> LSystemPointsDictionary = new Dictionary<string, List<Vector3>>();
 
+    /* 
+    The coord of the L-System ensemble
+    */
+    private List<Vector3> LSystemPointsList = new List<Vector3>();
+    public List<Vector3> _LSystemPointsList {get => LSystemPointsList; set => LSystemPointsList = value;}
+
     /*
     The list of rules the L-System have, and will use
     */
@@ -96,6 +102,12 @@ public class LSystemGenerator : ScriptableObject
     public List<Vector3> SecondaryDirections {get => secondaryDirections; set => secondaryDirections = value;}
 
     /*
+    The starting direction of the secondary L-Systems
+    */
+    private Vector3 secondaryDirection; //TODO Quaternion ?
+    public Vector3 SecondaryDirection {get => secondaryDirection; set => secondaryDirection = value;}
+
+    /*
     A boolean to activate/deactivate the random ignorance of the rule for a part of a branch
     */
     public bool randomIgnoreRuleModifier = true;
@@ -110,8 +122,8 @@ public class LSystemGenerator : ScriptableObject
     Helper function to create the sentence of the different level of networks
     return the full sentence of a network
     */
-    public string GenerateSentence(string word = null){
-        return GrowRecursive(word);
+    public string GenerateSentence(int maxDepth, string word = null){
+        return GrowRecursive(maxDepth, word);
     }
 
     /*
@@ -125,7 +137,7 @@ public class LSystemGenerator : ScriptableObject
         if(word == null){
             word = primaryRootSentence;
         }
-        return GenerateSentence(word);
+        return GenerateSentence(maxDepthPrimary, word);
     }
 
     /*
@@ -144,7 +156,7 @@ public class LSystemGenerator : ScriptableObject
         if(word == null){
             word = secondaryRootSentence;
         }
-        string secondarySentence = "[" + GenerateSentence(word) + "]";
+        string secondarySentence = "[" + GenerateSentence(maxDepthPrimary, word) + "]";
         secondarySentenceSize = secondarySentence.Length;
         sentence = sentence.Insert(position, secondarySentence);
         return sentence;
@@ -174,16 +186,16 @@ public class LSystemGenerator : ScriptableObject
     Process all characters of the current sequence to get the next sequence
     Call the ProcessRuleRecursively method to get the next part of the sequence
     */
-    public string GrowRecursive(string word, int depth = 0){
+    public string GrowRecursive(int maxDepth, string word, int depth = 0){
 
-        if(depth >= maxDepthPrimary){
+        if(depth >= maxDepth){
             return word;
         }
 
         StringBuilder newWord = new StringBuilder();
         foreach(char c in word){
             newWord.Append(c);
-            ProcessRuleRecursively(newWord, c, depth);
+            ProcessRuleRecursively(newWord, c, depth, maxDepth);
         }
 
         return newWord.ToString();
@@ -193,7 +205,7 @@ public class LSystemGenerator : ScriptableObject
     Process the rule on the character passed as a parameter
     Call the GrowRecursive method to get the next sequence to process
     */
-    public void ProcessRuleRecursively(StringBuilder newWord, char c, int depth)
+    public void ProcessRuleRecursively(StringBuilder newWord, char c, int depth, int maxDepth)
     {   
         foreach(Rule rule in rules){
             if(rule.letter == c.ToString())
@@ -203,7 +215,7 @@ public class LSystemGenerator : ScriptableObject
                         return;
                     }
                 }
-                newWord.Append(GrowRecursive(rule.GetResult(),depth+1));
+                newWord.Append(GrowRecursive(maxDepth, rule.GetResult(),depth+1));
             }
         }
     }
@@ -232,6 +244,8 @@ public class LSystemGenerator : ScriptableObject
         Vector3 tempPosition = position;//Vector3.zero;
 
         LSystemPointsDictionary["PRIMARY"] = new List<Vector3> { currentPosition };
+        LSystemPointsList.Add(currentPosition);
+
         foreach (char letter in sentence)
         {
             EncodingLetters encoding = (EncodingLetters)letter;
@@ -240,14 +254,14 @@ public class LSystemGenerator : ScriptableObject
                 case EncodingLetters.unknown:
                     break;
                 case EncodingLetters.save:
-                    savePoints.Push(new AgentParameter { position = currentPosition, direction = direction, length = lengthPrimary });
+                    savePoints.Push(new AgentParameter { position = currentPosition, direction = primaryDirection, length = lengthPrimary });
                     break;
                 case EncodingLetters.load:
                     if (savePoints.Count > 0)
                     {
                         AgentParameter ap = savePoints.Pop();
                         currentPosition = ap.position;
-                        direction = ap.direction;
+                        primaryDirection = ap.direction;
                         lengthPrimary = ap.length;
                     }
                     else
@@ -256,13 +270,14 @@ public class LSystemGenerator : ScriptableObject
                     }
                     break;
                 case EncodingLetters.draw:
-                    currentPosition += (direction * lengthPrimary);
+                    currentPosition += (primaryDirection * lengthPrimary);
                     List<Vector3> primaryPoints = LSystemPointsDictionary["PRIMARY"];
                     primaryPoints.Add(currentPosition);
                     LSystemPointsDictionary["PRIMARY"] = primaryPoints;
+                    LSystemPointsList.Add(currentPosition);
                     break;
                 case EncodingLetters.drawSecondary:
-                    currentPosition += (direction * lengthSecondary);
+                    currentPosition += (secondaryDirection * lengthSecondary);
                     List<Vector3> secondaryPoints;
                     if (!LSystemPointsDictionary.ContainsKey("SECONDARY"))
                     {
@@ -274,18 +289,19 @@ public class LSystemGenerator : ScriptableObject
                     }
                     secondaryPoints.Add(currentPosition);
                     LSystemPointsDictionary["SECONDARY"] = secondaryPoints;
+                    LSystemPointsList.Add(currentPosition);
                     break;
                 case EncodingLetters.turnRight:
-                    direction = Quaternion.AngleAxis(anglePrimary, Vector3.up) * direction;
+                    primaryDirection = Quaternion.AngleAxis(anglePrimary, Vector3.up) * primaryDirection;
                     break;
                 case EncodingLetters.turnLeft:
-                    direction = Quaternion.AngleAxis(-anglePrimary, Vector3.up) * direction;
+                    primaryDirection = Quaternion.AngleAxis(-anglePrimary, Vector3.up) * primaryDirection;
                     break;
                 case EncodingLetters.turnRightSecondary:
-                    direction = Quaternion.AngleAxis(angleSecondary, Vector3.up) * direction;
+                    secondaryDirection = Quaternion.AngleAxis(angleSecondary, Vector3.up) * secondaryDirection;
                     break;
                 case EncodingLetters.turnLeftSecondary:
-                    direction = Quaternion.AngleAxis(-angleSecondary, Vector3.up) * direction;
+                    secondaryDirection = Quaternion.AngleAxis(-angleSecondary, Vector3.up) * secondaryDirection;
                     break;
                 default:
                     break;
