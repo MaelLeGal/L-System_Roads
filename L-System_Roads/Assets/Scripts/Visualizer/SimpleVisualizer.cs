@@ -45,10 +45,10 @@ public class SimpleVisualizer : ScriptableObject
     public void VisualizeSequence(LSystemGenerator lsystem)
     {
         Stack<AgentParameter> savePoints = new Stack<AgentParameter>();
-        Vector3 currentPosition = lsystem.Position;//Vector3.zero;
-        Vector3 direction = lsystem.PrimaryDirection;
-        Vector3 tempPosition = lsystem.Position;//Vector3.zero;
-        int cpt = 0;
+        Vector3Int currentPosition = lsystem.Position;//Vector3.zero;
+        Vector3Int direction = lsystem.PrimaryDirection;
+        Vector3Int tempPosition = lsystem.Position;//Vector3.zero;
+        int cpt = 1;
 
         // First node
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -96,6 +96,7 @@ public class SimpleVisualizer : ScriptableObject
                 default:
                     break;
             }
+            //cpt++;
         }
     }
 
@@ -112,18 +113,20 @@ public class SimpleVisualizer : ScriptableObject
         lineRenderer.endColor = color;
         lineRenderer.startWidth = width;
         lineRenderer.endWidth = width;
-        lineRenderer.SetPosition(0,start);
-        lineRenderer.SetPosition(1,end);
+        lineRenderer.SetPosition(0, start);
+        lineRenderer.SetPosition(1, end);
     }
 
 
     MethodInfo getBuiltinExtraResourcesMethod;
-    Material GetDefaultMaterial() {
-        if( getBuiltinExtraResourcesMethod == null ) {
+    Material GetDefaultMaterial()
+    {
+        if (getBuiltinExtraResourcesMethod == null)
+        {
             BindingFlags bfs = BindingFlags.NonPublic | BindingFlags.Static;
-            getBuiltinExtraResourcesMethod = typeof( EditorGUIUtility ).GetMethod( "GetBuiltinExtraResource", bfs );
+            getBuiltinExtraResourcesMethod = typeof(EditorGUIUtility).GetMethod("GetBuiltinExtraResource", bfs);
         }
-        return (Material)getBuiltinExtraResourcesMethod.Invoke( null, new object[] { typeof( Material ), "Default-Line.mat" } );
+        return (Material)getBuiltinExtraResourcesMethod.Invoke(null, new object[] { typeof(Material), "Default-Line.mat" });
     }
 
 

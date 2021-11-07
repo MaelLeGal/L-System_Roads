@@ -45,11 +45,16 @@ public class LSystemManager : MonoBehaviour
         StartGenerateLSystem();
         Debug.Log("End Generation");
         MergeLSystem();
-        //Debug.Log("End Merge");
+        Debug.Log("End Merge");
 
-        foreach(var l in list_LSystem)
+        /*foreach(var l in list_LSystem)
         {
             visualizer.VisualizeSequence(l);
+        }*/
+
+        for (int i = 0; i < nbLSystem; i++)
+        {
+            visualizer.VisualizeSequence(list_LSystem[i]);
         }
     }
 
@@ -61,7 +66,7 @@ public class LSystemManager : MonoBehaviour
 
     public void PlaceLSystem(){
         
-        float boundPos = 5 * this.transform.GetChild(0).transform.localScale.x; //The coordinate at the edges of the ground are 5 times the scale of it
+        int boundPos = 5 * (int)this.transform.GetChild(0).transform.localScale.x; //The coordinate at the edges of the ground are 5 times the scale of it
         
         if(nbLSystem > list_LSystem.Count){
             nbLSystem = list_LSystem.Count;
@@ -69,34 +74,39 @@ public class LSystemManager : MonoBehaviour
 
         for(int i = 0; i < nbLSystem; i++){
 
-            Vector3 newPos;
-            Vector3 newDirection;
+            Vector3Int newPos;
+            Vector3Int newDirection;
+            Vector3Int newSecDirection;
             switch(i){
                 case 0: // Left
-                    newPos = new Vector3(-boundPos,0,Random.Range(0,boundPos));
-                    newDirection = Vector3.left;
+                    newPos = new Vector3Int(boundPos,0,(int)Random.Range(0,boundPos));
+                    newDirection = Vector3Int.left;
+                    newSecDirection = Vector3Int.forward;
                     break;
                 case 1: // Right
-                    newPos = new Vector3(boundPos,0,Random.Range(0,boundPos));
-                    newDirection = Vector3.right;
+                    newPos = new Vector3Int(-boundPos,0,(int)Random.Range(0,boundPos));
+                    newDirection = Vector3Int.right;
+                    newSecDirection = Vector3Int.forward;
                     break;
                 case 2: // Top
-                    newPos = new Vector3(Random.Range(0,boundPos),0,boundPos);
-                    newDirection = Vector3.forward;
+                    newPos = new Vector3Int((int)Random.Range(0,boundPos),0,boundPos);
+                    newDirection = Vector3Int.forward;
+                    newSecDirection = Vector3Int.left;
                     break;
                 case 3: // Bottom
-                    newPos = new Vector3(Random.Range(0,boundPos),0,-boundPos);
-                    newDirection = Vector3.back;
+                    newPos = new Vector3Int((int)Random.Range(0,boundPos),0,-boundPos);
+                    newDirection = Vector3Int.back;
+                    newSecDirection = Vector3Int.left;
                     break;
                 default: // Center
-                    newPos = new Vector3(0,0,0);
-                    newDirection = Vector3.forward;
+                    newPos = new Vector3Int(0,0,0);
+                    newDirection = Vector3Int.forward;
+                    newSecDirection = Vector3Int.forward;
                     break;
             }
-            Debug.Log(newPos);
-            Debug.Log(newDirection);
             list_LSystem[i].Position = newPos;
             list_LSystem[i].PrimaryDirection = newDirection;
+            list_LSystem[i].SecondaryDirection = newSecDirection;
         }
     }
 
@@ -114,10 +124,15 @@ public class LSystemManager : MonoBehaviour
     */
     public void StartGenerateLSystem()
     {
-        foreach(var lsystem in list_LSystem)
+        /*foreach(var lsystem in list_LSystem)
         {
             lsystem.GenerateNetwork();
-        }
+        }*/
+
+        for(int i = 0; i < nbLSystem; i++)
+        {
+            list_LSystem[i].GenerateNetwork();
+        } 
     }
 
     /*
@@ -148,21 +163,23 @@ public class LSystemManager : MonoBehaviour
 
                 Cell cell = new Cell(cells.Count, p1, p2);
 
-                for(int k = 0; k < list_LSystem.Count; k++)
+                /*for(int k = 0; k < list_LSystem.Count; k++)
                 {
-                    foreach(Vector3 point in list_LSystem[k]._LSystemPointsList)
+                    foreach(Vector3Int point in list_LSystem[k]._LSystemPointsList)
                     {
+                        Debug.Log(cell.PointInCell(point));
                         if (cell.PointInCell(point))
                         {
                             cell.points.Add((point,k));
                         }
                     }
                 }
+
                 //Debug.Log(cell.points.Count);
                 if(cell.points.Count > 0){
                     cell.meanPoints = cell.points.Select(tuple => tuple.Item1).Aggregate((res, val) => res + val) / cell.points.Count;
 
-                    foreach ((Vector3,int) point in cell.points)
+                    foreach ((Vector3Int,int) point in cell.points)
                     {
                         if (list_LSystem[point.Item2]._LSystemPointsList.Contains((point.Item1))){
                             int index = list_LSystem[point.Item2]._LSystemPointsList.FindIndex(p => p == point.Item1);
@@ -173,10 +190,45 @@ public class LSystemManager : MonoBehaviour
                             Debug.LogError("Point not in primary nor secondary network");
                         }
                     }
-                }
+                }*/
                 cells.Add(cell);
             }
         }
+
+        foreach(Cell cell in cells)
+        {
+            for (int k = 0; k < list_LSystem.Count; k++)
+            {
+                foreach (Vector3Int point in list_LSystem[k]._LSystemPointsList)
+                {
+                    //Debug.Log(cell.PointInCell(point));
+                    if (cell.PointInCell(point))
+                    {
+                        cell.points.Add((point, k));
+                    }
+                }
+            }
+
+            //Debug.Log(cell.points.Count);
+            if (cell.points.Count > 0)
+            {
+                cell.meanPoints = cell.points.Select(tuple => tuple.Item1).Aggregate((res, val) => res + val) / cell.points.Count;
+
+                foreach ((Vector3Int, int) point in cell.points)
+                {
+                    if (list_LSystem[point.Item2]._LSystemPointsList.Contains((point.Item1)))
+                    {
+                        int index = list_LSystem[point.Item2]._LSystemPointsList.FindIndex(p => p == point.Item1);
+                        list_LSystem[point.Item2]._LSystemPointsList[index] = cell.meanPoints;
+                    }
+                    else
+                    {
+                        Debug.LogError("Point not in primary nor secondary network");
+                    }
+                }
+            }
+        }
+        
 
 
 

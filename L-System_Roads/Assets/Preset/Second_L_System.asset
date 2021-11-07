@@ -9,20 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e72706a78d80a9f46a785b490f146462, type: 3}
-  m_Name: Third_L-System
+  m_Script: {fileID: 11500000, guid: 90992877039759748989feb9e8c596e8, type: 3}
+  m_Name: Second_L_System
   m_EditorClassIdentifier: 
   rules:
   - {fileID: 11400000, guid: aa6a6650d2759f74bbd7be7e832cc545, type: 2}
   - {fileID: 11400000, guid: ee48a70cbf5fb904598c83973e487289, type: 2}
   primaryRootSentence: F
   secondaryRootSentence: S
-  nbSecondaryLSystem: 1
-  maxDepthPrimary: 6
-  maxDepthSecondary: 6
-  lengthPrimary: 8
-  lengthSecondary: 4
+  nbSecondaryLSystem: 3
+  maxDepthPrimary: 3
+  maxDepthSecondary: 2
+  lengthPrimary: 10
+  lengthSecondary: 6
   anglePrimary: 20
   angleSecondary: 60
-  randomIgnoreRuleModifier: 1
-  chanceToIgnoreRule: 0.3
+  randomIgnoreRuleModifier: 0
+  chanceToIgnoreRule: 0

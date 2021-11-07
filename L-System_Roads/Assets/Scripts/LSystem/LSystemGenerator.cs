@@ -5,20 +5,20 @@ using System.Text;
 using System.Linq;
 
 [CreateAssetMenu(fileName = "L-System", menuName = "L-System_Roads/L-System", order = 0)]
-public class LSystemGenerator : ScriptableObject 
+public class LSystemGenerator : ScriptableObject
 {
 
     /*
     The points of the L-System ensemble
     A dictionnary with the type ("PRIMARY","SECONDARY") as key and a list of points as values
     */
-    public Dictionary<string, List<Vector3>> LSystemPointsDictionary = new Dictionary<string, List<Vector3>>();
+    public Dictionary<string, List<Vector3Int>> LSystemPointsDictionary = new Dictionary<string, List<Vector3Int>>();
 
     /* 
     The coord of the L-System ensemble
     */
-    private List<Vector3> LSystemPointsList = new List<Vector3>();
-    public List<Vector3> _LSystemPointsList {get => LSystemPointsList; set => LSystemPointsList = value;}
+    private List<Vector3Int> LSystemPointsList;// = new List<Vector3Int>();
+    public List<Vector3Int> _LSystemPointsList { get => LSystemPointsList; set => LSystemPointsList = value; }
 
     /*
     The list of rules the L-System have, and will use
@@ -39,7 +39,7 @@ public class LSystemGenerator : ScriptableObject
     The full sentence
     */
     private string fullSentence;
-    public string FullSentence {get => fullSentence;}
+    public string FullSentence { get => fullSentence; }
 
     /*
     The number of secondary L-System that will start on our primary L-System
@@ -54,58 +54,58 @@ public class LSystemGenerator : ScriptableObject
     /*
     The maximum depth/iterations of our primary L-System
     */
-    [Range(0,10)]
+    [Range(0, 10)]
     public int maxDepthPrimary = 1;
 
     /*
     The maximum depth/iterations of our secondary L-Systems
     */
-    [Range(0,10)]
+    [Range(0, 10)]
     public int maxDepthSecondary = 1;
 
     /*
     The length of the primary's segments
     */
-    public float lengthPrimary = 10;
+    public int lengthPrimary = 10;
 
     /*
     The length of the secondary's segments
     */
-    public float lengthSecondary = 6;
+    public int lengthSecondary = 6;
 
     /*
     The angle of the primary L-System
     */
-    public float anglePrimary = 20;
+    public int anglePrimary = 20;
 
     /*
     The angle of the secondary L-Systems
     */
-    public float angleSecondary = 60;
+    public int angleSecondary = 60;
 
     /*
     The starting position of the primary L-System
     */
-    private Vector3 position;
-    public Vector3 Position {get => position; set => position = value;}
+    private Vector3Int position;
+    public Vector3Int Position { get => position; set => position = value; }
 
     /*
     The starting direction of the primary L-System
     */
-    private Vector3 primaryDirection; //TODO Quaternion ?
-    public Vector3 PrimaryDirection {get => primaryDirection; set => primaryDirection = value;}
+    private Vector3Int primaryDirection; //TODO Quaternion ?
+    public Vector3Int PrimaryDirection { get => primaryDirection; set => primaryDirection = value; }
 
     /*
     The starting directions of the secondary L-Systems
     */
-    private List<Vector3> secondaryDirections; //TODO Quaternion ?
-    public List<Vector3> SecondaryDirections {get => secondaryDirections; set => secondaryDirections = value;}
+    private List<Vector3Int> secondaryDirections; //TODO Quaternion ?
+    public List<Vector3Int> SecondaryDirections { get => secondaryDirections; set => secondaryDirections = value; }
 
     /*
     The starting direction of the secondary L-Systems
     */
-    private Vector3 secondaryDirection; //TODO Quaternion ?
-    public Vector3 SecondaryDirection {get => secondaryDirection; set => secondaryDirection = value;}
+    private Vector3Int secondaryDirection; //TODO Quaternion ?
+    public Vector3Int SecondaryDirection { get => secondaryDirection; set => secondaryDirection = value; }
 
     /*
     A boolean to activate/deactivate the random ignorance of the rule for a part of a branch
@@ -115,14 +115,15 @@ public class LSystemGenerator : ScriptableObject
     /*
     The probability to ignore a rule once the boolean for the randomness on the ignorance of rule
     */
-    [Range(0,1)]
+    [Range(0, 1)]
     public float chanceToIgnoreRule = 0.3f;
 
     /*
     Helper function to create the sentence of the different level of networks
     return the full sentence of a network
     */
-    public string GenerateSentence(int maxDepth, string word = null){
+    public string GenerateSentence(int maxDepth, string word = null)
+    {
         return GrowRecursive(maxDepth, word);
     }
 
@@ -133,8 +134,10 @@ public class LSystemGenerator : ScriptableObject
         Call the GenerateSentence method to create the full primary network sentence
     return the primary network sentence
     */
-    public string GeneratePrimaryNetwork(string word = null){
-        if(word == null){
+    public string GeneratePrimaryNetwork(string word = null)
+    {
+        if (word == null)
+        {
             word = primaryRootSentence;
         }
         return GenerateSentence(maxDepthPrimary, word);
@@ -152,8 +155,10 @@ public class LSystemGenerator : ScriptableObject
     Call the GenerateSentence method to create the full secondary network sentence
     return the current sentence modified with the inserted secondary network sentence
     */
-    public string GenerateSecondaryNetwork(int position, string sentence, out int secondarySentenceSize, string word = null){
-        if(word == null){
+    public string GenerateSecondaryNetwork(int position, string sentence, out int secondarySentenceSize, string word = null)
+    {
+        if (word == null)
+        {
             word = secondaryRootSentence;
         }
         string secondarySentence = "[" + GenerateSentence(maxDepthPrimary, word) + "]";
@@ -166,15 +171,17 @@ public class LSystemGenerator : ScriptableObject
     Generate the full sentence of our L-System with primary and secondary network
     return the full sentence of our L-System
     */
-    public string GenerateNetwork(string word = null){
+    public string GenerateNetwork(string word = null)
+    {
         string sequence = GeneratePrimaryNetwork();
         List<int> indexes = SelectIndex(sequence, 'F');
 
         int offset = 0;
         int secondarySentenceSize;
 
-        foreach(int index in indexes){
-            sequence = GenerateSecondaryNetwork(index+offset, sequence, out secondarySentenceSize);
+        foreach (int index in indexes)
+        {
+            sequence = GenerateSecondaryNetwork(index + offset, sequence, out secondarySentenceSize);
             offset += secondarySentenceSize;
         }
         ProcessSentence(sequence);
@@ -186,14 +193,17 @@ public class LSystemGenerator : ScriptableObject
     Process all characters of the current sequence to get the next sequence
     Call the ProcessRuleRecursively method to get the next part of the sequence
     */
-    public string GrowRecursive(int maxDepth, string word, int depth = 0){
+    public string GrowRecursive(int maxDepth, string word, int depth = 0)
+    {
 
-        if(depth >= maxDepth){
+        if (depth >= maxDepth)
+        {
             return word;
         }
 
         StringBuilder newWord = new StringBuilder();
-        foreach(char c in word){
+        foreach (char c in word)
+        {
             newWord.Append(c);
             ProcessRuleRecursively(newWord, c, depth, maxDepth);
         }
@@ -206,16 +216,19 @@ public class LSystemGenerator : ScriptableObject
     Call the GrowRecursive method to get the next sequence to process
     */
     public void ProcessRuleRecursively(StringBuilder newWord, char c, int depth, int maxDepth)
-    {   
-        foreach(Rule rule in rules){
-            if(rule.letter == c.ToString())
+    {
+        foreach (Rule rule in rules)
+        {
+            if (rule.letter == c.ToString())
             {
-                if(randomIgnoreRuleModifier && depth > 3){
-                    if(Random.value < chanceToIgnoreRule){
+                if (randomIgnoreRuleModifier && depth > 3)
+                {
+                    if (Random.value < chanceToIgnoreRule)
+                    {
                         return;
                     }
                 }
-                newWord.Append(GrowRecursive(maxDepth, rule.GetResult(),depth+1));
+                newWord.Append(GrowRecursive(maxDepth, rule.GetResult(), depth + 1));
             }
         }
     }
@@ -233,19 +246,19 @@ public class LSystemGenerator : ScriptableObject
             indexes.Add(i);
         }
 
-        return indexes.OrderBy(x => Random.Range(1,indexes.Count)).Take(nbSecondaryLSystem).OrderBy(x => x).ToList();
+        return indexes.OrderBy(x => Random.Range(1, indexes.Count)).Take(nbSecondaryLSystem).OrderBy(x => x).ToList();
     }
 
     public void ProcessSentence(string sentence)
     {
+        LSystemPointsList = new List<Vector3Int>();
         Stack<AgentParameter> savePoints = new Stack<AgentParameter>();
-        Vector3 currentPosition = position;//Vector3.zero;
-        Vector3 direction = primaryDirection;
+        Vector3Int currentPosition = Vector3Int.FloorToInt(position);//Vector3.zero;
+        Vector3Int direction = primaryDirection;
         Vector3 tempPosition = position;//Vector3.zero;
 
-        LSystemPointsDictionary["PRIMARY"] = new List<Vector3> { currentPosition };
+        LSystemPointsDictionary["PRIMARY"] = new List<Vector3Int> { currentPosition };
         LSystemPointsList.Add(currentPosition);
-
         foreach (char letter in sentence)
         {
             EncodingLetters encoding = (EncodingLetters)letter;
@@ -270,18 +283,18 @@ public class LSystemGenerator : ScriptableObject
                     }
                     break;
                 case EncodingLetters.draw:
-                    currentPosition += (primaryDirection * lengthPrimary);
-                    List<Vector3> primaryPoints = LSystemPointsDictionary["PRIMARY"];
+                    currentPosition += Vector3Int.FloorToInt(primaryDirection * lengthPrimary);
+                    List<Vector3Int> primaryPoints = LSystemPointsDictionary["PRIMARY"];
                     primaryPoints.Add(currentPosition);
                     LSystemPointsDictionary["PRIMARY"] = primaryPoints;
                     LSystemPointsList.Add(currentPosition);
                     break;
                 case EncodingLetters.drawSecondary:
-                    currentPosition += (secondaryDirection * lengthSecondary);
-                    List<Vector3> secondaryPoints;
+                    currentPosition += Vector3Int.FloorToInt(secondaryDirection * lengthSecondary);
+                    List<Vector3Int> secondaryPoints;
                     if (!LSystemPointsDictionary.ContainsKey("SECONDARY"))
                     {
-                        secondaryPoints = new List<Vector3>();
+                        secondaryPoints = new List<Vector3Int>();
                     }
                     else
                     {
@@ -292,16 +305,16 @@ public class LSystemGenerator : ScriptableObject
                     LSystemPointsList.Add(currentPosition);
                     break;
                 case EncodingLetters.turnRight:
-                    primaryDirection = Quaternion.AngleAxis(anglePrimary, Vector3.up) * primaryDirection;
+                    primaryDirection = Vector3Int.FloorToInt(Quaternion.AngleAxis(anglePrimary, Vector3.up) * primaryDirection);
                     break;
                 case EncodingLetters.turnLeft:
-                    primaryDirection = Quaternion.AngleAxis(-anglePrimary, Vector3.up) * primaryDirection;
+                    primaryDirection = Vector3Int.FloorToInt(Quaternion.AngleAxis(-anglePrimary, Vector3.up) * primaryDirection);
                     break;
                 case EncodingLetters.turnRightSecondary:
-                    secondaryDirection = Quaternion.AngleAxis(angleSecondary, Vector3.up) * secondaryDirection;
+                    secondaryDirection = Vector3Int.FloorToInt(Quaternion.AngleAxis(angleSecondary, Vector3.up) * secondaryDirection);
                     break;
                 case EncodingLetters.turnLeftSecondary:
-                    secondaryDirection = Quaternion.AngleAxis(-angleSecondary, Vector3.up) * secondaryDirection;
+                    secondaryDirection = Vector3Int.FloorToInt(Quaternion.AngleAxis(-angleSecondary, Vector3.up) * secondaryDirection);
                     break;
                 default:
                     break;
