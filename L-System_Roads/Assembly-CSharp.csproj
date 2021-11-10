@@ -36,17 +36,12 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Visualizer\Direction.cs" />
-     <Compile Include="Assets\Scripts\LSystemManager.cs" />
-     <Compile Include="Assets\Scripts\Visualizer\Visualizer.cs" />
-     <Compile Include="Assets\Scripts\Cell.cs" />
-     <Compile Include="Assets\Scripts\EncodingLetters.cs" />
-     <Compile Include="Assets\Scripts\Visualizer\PlacementHelper.cs" />
      <Compile Include="Assets\Scripts\LSystem\LSystemGenerator.cs" />
-     <Compile Include="Assets\Scripts\Visualizer\Hermite.cs" />
-     <Compile Include="Assets\Scripts\Visualizer\AgentParameter.cs" />
+     <Compile Include="Assets\Scripts\Cell.cs" />
      <Compile Include="Assets\Scripts\Visualizer\SimpleVisualizer.cs" />
-     <Compile Include="Assets\Scripts\Visualizer\RoadHelper.cs" />
+     <Compile Include="Assets\Scripts\LSystemManager.cs" />
+     <Compile Include="Assets\Scripts\Visualizer\AgentParameter.cs" />
+     <Compile Include="Assets\Scripts\EncodingLetters.cs" />
      <Compile Include="Assets\Scripts\Rules\Rule.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.18f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
