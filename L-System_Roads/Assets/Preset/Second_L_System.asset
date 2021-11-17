@@ -17,11 +17,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ee48a70cbf5fb904598c83973e487289, type: 2}
   primaryRootSentence: F
   secondaryRootSentence: S
-  nbSecondaryLSystem: 3
+  nbSecondaryLSystem: 2
   maxDepthPrimary: 3
   maxDepthSecondary: 2
-  lengthPrimary: 10
-  lengthSecondary: 6
+  lengthPrimary: 8
+  lengthSecondary: 5
   anglePrimary: 20
   angleSecondary: 60
   randomIgnoreRuleModifier: 0

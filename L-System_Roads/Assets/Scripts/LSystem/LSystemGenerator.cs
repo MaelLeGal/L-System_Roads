@@ -47,11 +47,6 @@ public class LSystemGenerator : ScriptableObject
     public int nbSecondaryLSystem = 1;
 
     /*
-    The list of secondary L-Systems
-    */
-    private List<LSystemGenerator> secondaryLSystems = new List<LSystemGenerator>();
-
-    /*
     The maximum depth/iterations of our primary L-System
     */
     [Range(0, 10)]
@@ -92,19 +87,19 @@ public class LSystemGenerator : ScriptableObject
     /*
     The starting direction of the primary L-System
     */
-    private Vector3Int primaryDirection; //TODO Quaternion ?
+    private Vector3Int primaryDirection;
     public Vector3Int PrimaryDirection { get => primaryDirection; set => primaryDirection = value; }
 
     /*
     The starting directions of the secondary L-Systems
     */
-    private List<Vector3Int> secondaryDirections; //TODO Quaternion ?
+    private List<Vector3Int> secondaryDirections;
     public List<Vector3Int> SecondaryDirections { get => secondaryDirections; set => secondaryDirections = value; }
 
     /*
     The starting direction of the secondary L-Systems
     */
-    private Vector3Int secondaryDirection; //TODO Quaternion ?
+    private Vector3Int secondaryDirection;
     public Vector3Int SecondaryDirection { get => secondaryDirection; set => secondaryDirection = value; }
 
     /*
@@ -195,7 +190,6 @@ public class LSystemGenerator : ScriptableObject
     */
     public string GrowRecursive(int maxDepth, string word, int depth = 0)
     {
-
         if (depth >= maxDepth)
         {
             return word;
@@ -249,13 +243,16 @@ public class LSystemGenerator : ScriptableObject
         return indexes.OrderBy(x => Random.Range(1, indexes.Count)).Take(nbSecondaryLSystem).OrderBy(x => x).ToList();
     }
 
+    /*
+    Process the sentence to create each point of our L-System
+    */
     public void ProcessSentence(string sentence)
     {
         LSystemPointsList = new List<Vector3Int>();
         Stack<AgentParameter> savePoints = new Stack<AgentParameter>();
-        Vector3Int currentPosition = Vector3Int.FloorToInt(position);//Vector3.zero;
+        Vector3Int currentPosition = Vector3Int.FloorToInt(position);
         Vector3Int direction = primaryDirection;
-        Vector3 tempPosition = position;//Vector3.zero;
+        Vector3 tempPosition = position;
 
         LSystemPointsDictionary["PRIMARY"] = new List<Vector3Int> { currentPosition };
         LSystemPointsList.Add(currentPosition);

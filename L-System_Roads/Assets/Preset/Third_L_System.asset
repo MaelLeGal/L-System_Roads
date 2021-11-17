@@ -19,7 +19,7 @@ MonoBehaviour:
   secondaryRootSentence: S
   nbSecondaryLSystem: 5
   maxDepthPrimary: 5
-  maxDepthSecondary: 1
+  maxDepthSecondary: 4
   lengthPrimary: 10
   lengthSecondary: 6
   anglePrimary: 20
